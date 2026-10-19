@@ -1,0 +1,168 @@
+{
+	"info": {
+		"name": "Lab 4 - API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://postman-echo.com"
+		}
+	],
+	"item": [
+		{
+			"name": "01 GET with Params",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"const json = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is JSON\", function () {",
+							"    const contentType = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(contentType).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Name is Oleksandr\", function () {",
+							"    pm.expect(json.args.name).to.eql(\"Oleksandr\");",
+							"});",
+							"",
+							"pm.test(\"Role is student\", function () {",
+							"    pm.expect(json.args.role).to.eql(\"student\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/get?name=Oleksandr&role=student",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Oleksandr"
+						},
+						{
+							"key": "role",
+							"value": "student"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02 POST JSON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"const json = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains product\", function () {",
+							"    pm.expect(json.data).to.have.property(\"product\");",
+							"});",
+							"",
+							"pm.test(\"Product is Backpack\", function () {",
+							"    pm.expect(json.data.product).to.eql(\"Backpack\");",
+							"});",
+							"",
+							"pm.test(\"Quantity is 2\", function () {",
+							"    pm.expect(json.data.quantity).to.eql(2);",
+							"});",
+							"",
+							"pm.test(\"Quantity is a number\", function () {",
+							"    pm.expect(json.data.quantity).to.be.a(\"number\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"product\": \"Backpack\",\n    \"quantity\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03 Negative - 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"const json = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response status is 404\", function () {",
+							"    pm.expect(json.status).to.eql(404);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/status/404",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"status",
+						"404"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
